@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ürün Maliyet ve Fiyat Grafiği</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .chart-container {
+      display: flex;
+      justify-content: space-between;
+    }
+    .chart {
+      width: 48%;
+    }
+  </style>
+</head>
+<body>
+  <div style="width:80%; margin:auto;">
+    <h1>Sulama Makineleri</h1>
+    <H2>Ürün Yıllık Maliyet</H2>
+    <label for="branchSelect">Şube Seç:</label>
+    <select id="branchSelect" onchange="updateChart()">
+      <option value="sube1">Menderes Şubesi</option>
+      <option value="sube2">Tepeköy Şubesi</option>
+      <option value="sube3">Yeşilköy Şubesi</option>
+      <option value="sube4">Manisa Şubesi</option>
+      <option value="sube5">İncirli Şubesi</option>
+    </select>
+
+    <label for="materialFilter">Malzeme Filtrele:</label>
+    <select id="materialFilter" onchange="updateChart()">
+      <option value="malzeme1">1.Kalite</option>
+      <option value="malzeme2">2.Kalite</option>
+      <option value="malzeme3">3.Kalite</option>
+    </select>
+
+    <label for="supplierFilter">Tedarikçi Filtrele:</label>
+    <select id="supplierFilter" onchange="updateChart()">
+      <option value="tedarikci1">Saygın Tedarik</option>
+      <option value="tedarikci2">Beril Tedarik</option>
+      <option value="tedarikci3">Uygun Tedarik</option>
+    </select>
+
+    <div class="chart-container">
+      <div class="chart">
+        <canvas id="productCostPriceChart" style="max-height: 500px;"></canvas>
+      </div>
+      <div class="chart">
+        <h1>Ürün Yıllık Fiyatı</h1>
+        <canvas id="productAnnualPriceChart" style="max-height: 500px;"></canvas>
+      </div>
+    </div>
+
+    <h1>Rakip Fiyat Analizi</h1>
+    <canvas id="competitorPricesChart" style="max-height: 500px;"></canvas>
+  </div>
+
+  <script>
+    var years = ["2020", "2021", "2022", "2023", "TAHMİNİ 2024"];
+
+    var materials = {
+      "malzeme1": [0.9, 0.95, 1.0, 1.05, 1.1],
+      "malzeme2": [0.85, 0.9, 0.95, 1.0, 1.05],
+      "malzeme3": [0.8, 0.85, 0.9, 0.95, 1.0]
+    };
+
+    var supplierCosts = {
+      "tedarikci1": [0.95, 0.98, 1.02, 1.05, 1.08],
+      "tedarikci2": [0.92, 0.96, 1.0, 1.03, 1.06],
+      "tedarikci3": [0.88, 0.92, 0.96, 1.0, 1.04]
+    };
+
+    var costs = {
+      "Ürün1": {
+        "sube1": [5000, 5500, 6000, 6500, 7000],
+        "sube2": [5100, 5600, 6100, 6600, 7100],
+        "sube3": [5200, 5700, 6200, 6700, 7200],
+        "sube4": [5300, 5800, 6300, 6800, 7300],
+        "sube5": [5400, 5900, 6400, 6900, 7400],
+      }
+    };
+
+    var competitorPrices = {
+      "Rakip1": {
+        "sube1": [9500, 9800, 10000, 10500, 11000],
+        "sube2": [9600, 9900, 10200, 10700, 11200],
+        "sube3": [9700, 10000, 10400, 10900, 11400],
+        "sube4": [9800, 10100, 10600, 11100, 11600],
+        "sube5": [9900, 10200, 10800, 11300, 11800],
+      },
+      "Rakip2": {
+        "sube1": [9200, 9500, 9800, 10100, 10400],
+        "sube2": [9300, 9600, 9900, 10200, 10700],
+        "sube3": [9400, 9700, 10000, 10400, 10900],
+        "sube4": [9500, 9800, 10100, 10600, 11100],
+        "sube5": [9600, 9900, 10200, 10800, 11300],
+      },
+      "Rakip3": {
+        "sube1": [8800, 9100, 9400, 9700, 10000],
+        "sube2": [8900, 9200, 9500, 9800, 10100],
+        "sube3": [9000, 9300, 9600, 9900, 10200],
+        "sube4": [9100, 9400, 9700, 10000, 10400],
+        "sube5": [9200, 9500, 9800, 10100, 10600],
+      }
+    };
+
+    var selectedBranch = "sube1"; // Default: Şube 1
+    var selectedMaterial = "malzeme1"; // Default: Malzeme 1
+    var selectedSupplier = "tedarikci1"; // Default: Tedarikçi 1
+
+    var ctx1 = document.getElementById("productCostPriceChart").getContext("2d");
+    var productCostPriceChart;
+
+    var ctx2 = document.getElementById("competitorPricesChart").getContext("2d");
+    var competitorPricesChart;
+
+    var ctx3 = document.getElementById("productAnnualPriceChart").getContext("2d");
+    var productAnnualPriceChart;
+
+    document.addEventListener("DOMContentLoaded", function () {
+      updateChart();
+    });
+
+    function updateChart() {
+      selectedBranch = document.getElementById("branchSelect").value;
+      selectedMaterial = document.getElementById("materialFilter").value;
+      selectedSupplier = document.getElementById("supplierFilter").value;
+      drawProductCostPriceChart();
+      drawCompetitorPricesChart();
+      drawProductAnnualPriceChart();
+    }
+
+    function drawProductCostPriceChart() {
+      if (productCostPriceChart) {
+        productCostPriceChart.destroy();
+      }
+
+      var materialMultipliers = materials[selectedMaterial];
+      var supplierMultiplier = supplierCosts[selectedSupplier];
+
+      productCostPriceChart = new Chart(ctx1, {
+        type: "bar",
+        data: {
+          labels: years,
+          datasets: Object.keys(costs).map(function (item) {
+            return {
+              label: item + " Maliyet",
+              data: costs[item][selectedBranch].map((cost, index) => cost * materialMultipliers[index] * supplierMultiplier[index]),
+              backgroundColor: getRandomColor(),
+              borderColor: getRandomColor(),
+              borderWidth: 1
+            };
+          })
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
+    }
+
+    function drawCompetitorPricesChart() {
+      if (competitorPricesChart) {
+        competitorPricesChart.destroy();
+      }
+
+      competitorPricesChart = new Chart(ctx2, {
+        type: "bar",
+        data: {
+          labels: years,
+          datasets: Object.keys(competitorPrices).map(function (competitor) {
+            return {
+              label: competitor + " Fiyat",
+              data: competitorPrices[competitor][selectedBranch],
+              backgroundColor: getRandomColor(),
+              borderColor: getRandomColor(),
+              borderWidth: 1
+            };
+          })
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
+    }
+
+    function drawProductAnnualPriceChart() {
+      if (productAnnualPriceChart) {
+        productAnnualPriceChart.destroy();
+      }
+
+      productAnnualPriceChart = new Chart(ctx3, {
+        type: "bar",
+        data: {
+          labels: years,
+          datasets: [{
+            label: "Ürün Yıllık Fiyat",
+            data: [12000, 12500, 13000, 13500, 14000],
+            backgroundColor: getRandomColor(),
+            borderColor: getRandomColor(),
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
+    }
+
+    function getRandomColor() {
+      var letters = "0123456789ABCDEF";
+      var color = "#";
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+  </script>
+</body>
+</html>

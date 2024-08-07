@@ -1,0 +1,330 @@
+<!-- Chart.js kütüphanesini ekleyin -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<!-- Müşteriler.html sayfası -->
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Müşteriler</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Diğer head içeriği -->
+    <style>
+        #grafikContainer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #buttonContainer {
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        canvas {
+            border: 1px solid #ccc;
+        }
+
+        #huniGrafigiContainer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #filtreleContainer {
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        #filtreleAltContainer {
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Reklam Sayılarına Bağlı Müşteri Sayısı Grafiği İçin Container Div -->
+    <div id="grafikContainer">
+        <h1>Reklam Sayılarına Bağlı Müşteri Sayısı Değişimi</h1>
+        <!-- Reklam Sayılarına Bağlı Müşteri Sayısı Grafiği İçin Canvas Elementi -->
+        <canvas id="musteriGrafigi" width="800" height="400" style="border: 1px solid #ccc; margin: 0 auto;"></canvas>
+    </div>
+
+    <!-- Arttır ve Azalt Butonları Container Div -->
+    <div id="buttonContainer">
+        <button onclick="arttirReklam(5)">5 Arttır</button>
+        <button onclick="arttirReklam(10)">10 Arttır</button>
+        <button onclick="arttirReklam(15)">15 Arttır</button>
+        <button onclick="azaltReklam(2)">2 Azalt</button>
+        <button onclick="azaltReklam(9)">9 Azalt</button>
+        <button onclick="azaltReklam(20)">20 Azalt</button>
+    </div>
+    <div id="buttonContainer">
+        <label for="arttirInput">Arttır:</label>
+        <input type="number" id="arttirInput" min="1" value="1">
+        <button onclick="arttirReklam()">Arttır</button>
+
+        <label for="azaltInput">Azalt:</label>
+        <input type="number" id="azaltInput" min="1" value="1">
+        <button onclick="azaltReklam()">Azalt</button>
+    </div>
+
+    <!-- Filtreleme Seçenekleri Container Div -->
+    <div id="filtreleContainer">
+        <label for="filterType">Filtrele: </label>
+        <select id="filterType" onchange="updateHuniGrafigi()">
+            <option value="monthly">6 Aylık</option>
+            <option value="yearly">1 Yıllık</option>
+            
+        </select>
+        <label for="filterYear">Yıl: </label>
+        <select id="filterYear" onchange="updateHuniGrafigi()">
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2023">Tahmini 2024</option>
+            <!-- Yıl seçeneklerini isteğinize göre ekleyin -->
+        </select>
+    </div>
+
+    <!-- Satış Hunisi Raporu Grafiği İçin Container Div -->
+    <div id="huniGrafigiContainer">
+        <h1 style="margin-bottom: 10px;">Web Sitesi Ziyaret Raporu</h1>
+        <!-- Satış Hunisi Raporu Grafiği İçin Canvas Elementi -->
+        <canvas id="huniGrafigi" width="800" height="400" style="border: 1px solid #ccc; margin: 0 auto;"></canvas>
+    </div>
+
+    <!-- Filtreleme Seçenekleri Alt Container Div -->
+    <!-- <div id="filtreleAltContainer">
+        <p>Filtreler Satış Hunisi Raporu</p>
+    </div> -->
+    <!-- Filtreleme Seçenekleri Container Div -->
+<!-- <div id="filtreleContainer">
+    <label for="filterType">Filtrele: </label>
+    <select id="filterType" onchange="updateHuniGrafigi()">
+        <option value="monthly">Aylık</option>
+        <option value="yearly">Yıllık</option>
+        <option value="prediction">Tahmini 2024</option> <!-- Yeni seçenek -->
+    </select>
+    <label for="filterYear">Yıl: </label>
+    <select id="filterYear" onchange="updateHuniGrafigi()">
+        <option value="2022">2022</option>
+        <option value="2023">2023</option>
+        <option value="2024">2024</option> <!-- Yeni yıl seçeneği -->
+        <!-- Yıl seçeneklerini isteğinize göre ekleyin -->
+    </select>
+</div> 
+
+
+
+    <script>
+        // Reklam sayılarına bağlı müşteri sayısı verileri
+        var aylar = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+        var reklamSayilari = [30, 20, 50, 44, 40, 60, 55, 70, 64, 66, 88,72];
+        var musteriSayilari = [150, 120, 150, 270, 200, 250, 280, 276, 320, 350,340,333];
+
+        // Satış hunisi raporu verileri
+        var adimlar = ['Ziyaret', 'Üye Kaydı', 'Ürün Sepeti', 'Ödeme', 'Onay'];
+        var huniVerileriAylar = [
+            [5000, 3000, 1500, 1000, 800], // 2022 Ocak
+            [4500, 2800, 1300, 900, 700],  // 2022 Şubat
+            // ... Diğer ayların verileri
+        ];
+        var huniVerileriYillar = [
+            [65000, 39000, 18000, 12000, 10000], // 2022
+            [75000, 42000, 20000, 15000, 12000], // 2023
+            // ... Diğer yılların verileri
+        ];
+
+        // Grafiği oluşturmak için fonksiyonu çağır
+        createMusteriGrafigi();
+        createHuniGrafigi();
+
+        // musteriGrafigi ve huniGrafigi değişkenlerini global olarak tanımla
+        
+        var musteriGrafigi;
+        var huniGrafigi;
+        
+
+        function createMusteriGrafigi() {
+            var ctx = document.getElementById('musteriGrafigi').getContext('2d');
+            musteriGrafigi = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: aylar,
+                    datasets: [{
+                        label: 'Reklam Sayısı',
+                        data: reklamSayilari,
+                        borderColor: 'rgb(75, 192, 191)',
+                        borderWidth: 2,
+                        fill: false
+                    }, {
+                        label: 'Müşteri Sayısı',
+                        data: musteriSayilari,
+                        borderColor: 'rgb(192, 75, 191)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            type: 'category',
+                            position: 'bottom'
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function createHuniGrafigi() {
+            var ctx = document.getElementById('huniGrafigi').getContext('2d');
+            huniGrafigi = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: adimlar,
+                    datasets: [{
+                        label: 'Adımlar',
+                        data: huniVerileriAylar[0], // Başlangıç olarak ilk ayın verilerini kullan
+                        backgroundColor: 'rgb(75, 192, 191)',
+                        borderWidth: 2,
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            type: 'category',
+                            position: 'bottom'
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Reklam sayısını arttırmak için fonksiyon
+// Reklam sayısını arttırmak için fonksiyon
+
+function arttirReklam(miktar) {
+    for (var i = 0; i < reklamSayilari.length; i++) {
+        if (i === 0 || i === 1 || i === 2 || i === 11) {
+            reklamSayilari[i] += miktar;
+            musteriSayilari[i] += miktar / 5; // Müşteri sayısını orantılı olarak arttır
+        } else {
+            reklamSayilari[i] += miktar;
+        }
+    }
+    updateGrafigi();
+}
+
+// Reklam sayısını azaltmak için fonksiyon
+function azaltReklam(miktar) {
+    for (var i = 0; i < reklamSayilari.length; i++) {
+        if (i === 0 || i === 1 || i === 2 || i === 11) {
+            reklamSayilari[i] -= miktar;
+            musteriSayilari[i] -= miktar / 5; // Müşteri sayısını orantılı olarak azalt
+        } else {
+            reklamSayilari[i] -= miktar;
+        }
+    }
+    updateGrafigi();
+}
+
+
+
+        // Huni grafiğini güncellemek için fonksiyon
+        function updateHuniGrafigi() {
+            var filterType = document.getElementById("filterType").value;
+            var filterYear = document.getElementById("filterYear").value;
+            var selectedData;
+
+            if (filterType === "monthly") {
+                selectedData = huniVerileriAylar[filterYear - 2022];
+            } else if (filterType === "yearly") {
+                selectedData = huniVerileriYillar[filterYear - 2022];
+            }
+
+            huniGrafigi.data.datasets[0].data = selectedData;
+            huniGrafigi.update(); // Grafiği güncelle
+        }
+
+        // Grafiği güncellemek için fonksiyon
+        function updateGrafigi() {
+            // Yeni veri setleriyle grafiği güncelle
+            musteriGrafigi.data.datasets[0].data = reklamSayilari;
+            musteriGrafigi.data.datasets[1].data = musteriSayilari;
+            musteriGrafigi.update(); // Grafiği güncelle
+        }
+
+        // Yeni yıl verilerini tahmin etmek için fonksiyon
+        function tahminleYeniYil() {
+            var sonYil = huniVerileriYillar.length;
+            var yeniYilVerileri = [];
+
+            // Verilerin %10 artması
+            for (var i = 0; i < huniVerileriYillar[sonYil - 1].length; i++) {
+                yeniYilVerileri[i] = huniVerileriYillar[sonYil - 1][i] * 4.5;
+            }
+
+            huniVerileriYillar.push(yeniYilVerileri);
+            updateHuniGrafigi();
+        }
+        function tahminle2024() {
+        var sonYil = huniVerileriYillar.length;
+        var tahmini2024Verileri = [];
+
+        // Verilerin %10 artması
+        for (var i = 0; i < huniVerileriYillar[sonYil - 1].length; i++) {
+            tahmini2024Verileri[i] = huniVerileriYillar[sonYil - 1][i] * 3.4;
+        }
+
+        // 2024 verilerini tahminleme işlemi tamamlandığında grafiği güncelle
+        huniVerileriYillar.push(tahmini2024Verileri);
+        updateHuniGrafigi();
+    }
+    function updateGrafik() {
+        var filterType = document.getElementById("filterType").value;
+        var filterYear = document.getElementById("filterYear").value;
+        var selectedData;
+
+        if (filterType === "monthly") {
+            selectedData = huniVerileriAylar[filterYear - 2022];
+        } else if (filterType === "yearly") {
+            selectedData = huniVerileriYillar[filterYear - 2022];
+        } else if (filterType === "prediction") {
+            // Eğer tahminleme seçeneği seçildiyse 2024 tahminini yap
+            tahminle2024();
+            return; // Grafiği burada güncelledik, tekrar güncellemeye gerek yok
+        }
+
+        huniGrafigi.data.datasets[0].data = selectedData;
+        huniGrafigi.update(); // Grafiği güncelle
+    }
+    function tahminle2024() {
+            var sonYil = huniVerileriYillar.length;
+            var tahmini2024Verileri = [];
+
+            // Verilerin %10 artması
+            for (var i = 0; i < huniVerileriYillar[sonYil - 1].length; i++) {
+                tahmini2024Verileri[i] = huniVerileriYillar[sonYil - 1][i] * 3.2;
+            }
+
+            // 2024 verilerini tahminleme işlemi tamamlandığında grafiği güncelle
+            huniVerileriYillar.push(tahmini2024Verileri);
+            updateHuniGrafigi();
+        }
+        
+        
+    </script>
+</body>
+
+</html>

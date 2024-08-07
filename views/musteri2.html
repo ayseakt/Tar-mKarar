@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Şubelere Göre Ürün Satışları</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <h1>Şubelere Göre Ürün Satışları</h1>
+</head>
+
+<body>
+    <div style="display: flex;">
+        <div>
+            <!-- Bölgelere Göre Ürün Satışları Grafiği İçin Canvas Elementi -->
+            <canvas id="bolgeSatisGrafigi" width="800" height="400" style="border: 1px solid #ccc; margin: 0 auto;"></canvas>
+        </div>
+        <div style="margin-left: 20px;">
+            <!-- Kart -->
+            <div style="border: 1px solid #ccc; padding: 10px; width: 200px;">
+                <label for="subeSelect">Şube Seçin:</label>
+                <select id="subeSelect" onchange="updateChart()">
+                    <option value="Kuzey">Menderes</option>
+                    <option value="Güney">Tepeköy</option>
+                    <option value="Doğu">Yeşilköy</option>
+                    <option value="Batı">Batı</option>
+                    <option value="Orta">Orta</option>
+                </select>
+                <br>
+                <label for="indirimSelect">İndirim Seçin:</label>
+                <select id="indirimSelect" onchange="updateChart()">
+                    <!-- <option value="0">İndirim Yok</option> -->
+                    <option value="5">50%</option>
+                    <option value="10">25%</option>
+                    <option value="25">10%</option>
+                    <option value="50">5%</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Bölgelere göre beş ürünün satış verileri
+        var bolgeListesi = ['Kuzey', 'Güney', 'Doğu', 'Batı', 'Orta'];
+        var urun1Satis = [500, 600, 700, 800, 900];
+        var urun2Satis = [400, 550, 600, 750, 800];
+        var urun3Satis = [300, 450, 550, 650, 700];
+        var urun4Satis = [600, 700, 800, 900, 1000];
+        var urun5Satis = [700, 800, 900, 1000, 1100];
+
+        // Renkler
+        var renkler = ['rgba(255, 99, 132, 0.7)', 'rgba(54, 162, 235, 0.7)', 'rgba(255, 206, 86, 0.7)', 'rgba(75, 192, 192, 0.7)', 'rgba(153, 102, 255, 0.7)'];
+
+        // Seçilen şube ve indirime göre satış verilerini güncellemek için fonksiyon
+        function updateChart() {
+            var selectedSube = document.getElementById('subeSelect').value;
+            var indirimOrani = parseFloat(document.getElementById('indirimSelect').value) / 100;
+
+            var updatedData = [];
+            var urun1Updated = [];
+            var urun2Updated = [];
+            var urun3Updated = [];
+            var urun4Updated = [];
+            var urun5Updated = [];
+
+            for (var i = 0; i < bolgeListesi.length; i++) {
+                var indirimliSatis = urun1Satis[i] * (1 - indirimOrani);
+                urun1Updated.push((bolgeListesi[i] === selectedSube) ? indirimliSatis : urun1Satis[i]);
+
+                indirimliSatis = urun2Satis[i] * (1 - indirimOrani);
+                urun2Updated.push((bolgeListesi[i] === selectedSube) ? indirimliSatis : urun2Satis[i]);
+
+                indirimliSatis = urun3Satis[i] * (1 - indirimOrani);
+                urun3Updated.push((bolgeListesi[i] === selectedSube) ? indirimliSatis : urun3Satis[i]);
+
+                indirimliSatis = urun4Satis[i] * (1 - indirimOrani);
+                urun4Updated.push((bolgeListesi[i] === selectedSube) ? indirimliSatis : urun4Satis[i]);
+
+                indirimliSatis = urun5Satis[i] * (1 - indirimOrani);
+                urun5Updated.push((bolgeListesi[i] === selectedSube) ? indirimliSatis : urun5Satis[i]);
+            }
+
+            updatedData.push(urun1Updated, urun2Updated, urun3Updated, urun4Updated, urun5Updated);
+
+            bolgeSatisGrafigi.data.datasets.forEach(function (dataset, i) {
+                dataset.data = updatedData[i];
+            });
+
+            bolgeSatisGrafigi.update();
+        }
+
+        // Grafiği oluşturmak için fonksiyonu çağır
+        createBolgeSatisGrafigi();
+
+        function createBolgeSatisGrafigi() {
+            var ctx = document.getElementById('bolgeSatisGrafigi').getContext('2d');
+            bolgeSatisGrafigi = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: bolgeListesi,
+                    datasets: [{
+                        label: 'Ürün 1 Satışları',
+                        data: urun1Satis,
+                        backgroundColor: renkler[0],
+                        borderWidth: 2,
+                    }, {
+                        label: 'Ürün 2 Satışları',
+                        data: urun2Satis,
+                        backgroundColor: renkler[1],
+                        borderWidth: 2,
+                    }, {
+                        label: 'Ürün 3 Satışları',
+                        data: urun3Satis,
+                        backgroundColor: renkler[2],
+                        borderWidth: 2,
+                    }, {
+                        label: 'Ürün 4 Satışları',
+                        data: urun4Satis,
+                        backgroundColor: renkler[3],
+                        borderWidth: 2,
+                    }, {
+                        label: 'Ürün 5 Satışları',
+                        data: urun5Satis,
+                        backgroundColor: renkler[4],
+                        borderWidth: 2,
+                    }, {
+                        label: 'Ortalama Satış',
+                        data: calculateAverage(),
+                        type: 'line',
+                        borderColor: 'rgba(0, 0, 0, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            type: 'category',
+                            position: 'bottom'
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function calculateAverage() {
+            var averages = [];
+            for (var i = 0; i < bolgeListesi.length; i++) {
+                var total = urun1Satis[i] + urun2Satis[i] + urun3Satis[i] + urun4Satis[i] + urun5Satis[i];
+                var average = total / 5;
+                averages.push(average);
+            }
+            return averages;
+        }
+    </script>
+</body>
+
+</html>

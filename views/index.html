@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Türel Tarım A.Ş</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #263238;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        .logo-details {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-details i {
+            font-size: 35px;
+            color: #fff;
+            margin-right: 10px;
+        }
+
+        .logo-details .logo_name {
+            font-size: 22px;
+            color: #fff;
+        }
+
+        .nav-links {
+            width: 100%;
+            padding: 10px 0;
+            list-style: none;
+        }
+
+        .nav-links li {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        .nav-links li:hover {
+            background: #4a565a;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #fff;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links .link_name {
+            margin-left: 10px;
+        }
+
+        .home-section {
+            flex: 1;
+            padding: 80px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dashboard-cards {
+            display: flex;
+            justify-content: space-evenly;
+            gap: 100px;
+            margin-bottom: 100px;
+        }
+
+        .dashboard-card {
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 50px;
+            text-align: center;
+            width: 100%; /* Değişiklik burada yapıldı */
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .chart-container-graphs {
+            display: flex;
+            margin-top: 0px;
+            margin-right: 100px;
+        }
+
+        .chartA,
+        .chartB {
+            width: 700px;
+            height: 500px;
+            background: #fff;
+            box-shadow: 50px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-right: 20px; /* Değişiklik burada yapıldı */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        td img {
+            max-width: 50px;
+            margin-right: 10px;
+        }
+
+        .btn {
+            background-color: #263238;
+            color: #fff;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+
+        .btn:hover {
+            background-color: #1a2428;
+        }
+
+        .content-2 {
+            display: flex;
+            gap: 20px;
+        }
+
+        .recent-payments,
+        .new-students {
+            flex: 1;
+        }
+
+        .recent-payments table,
+        .new-students table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .recent-payments th,
+        .recent-payments td,
+        .new-students th,
+        .new-students td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .recent-payments th,
+        .new-students th {
+            background-color: #f2f2f2;
+        }
+
+        .recent-payments tr:nth-child(even),
+        .new-students tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .recent-payments td img,
+        .new-students td img {
+            max-width: 50px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo-details">
+            <i class='bx bx-meteor'></i>
+            <span class="logo_name">Türel Tarım A.Ş</span>
+        </div>
+        <ul class="nav-links">
+            <li>
+                <a href="#">
+                    <i class='bx bx-grid-alt'></i>
+                    <span class="link_name">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="urunler">
+                    <i class='bx bx-pie-chart-alt-2'></i>
+                    <span class="link_name">Ürünler</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">Ürünler</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="yorumlar.html">
+                    <i class='bx bxs-network-chart'></i>
+                    <span class="link_name">Yorumlar</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">Yorumlar</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="musteri.html">
+                    <i class='bx bxs-network-chart'></i>
+                    <span class="link_name">Müşteriler</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">Müşteriler</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="profile-details">
+                    <div class="profile-content">
+                        <img src="img.jpeg" alt="profile">
+                    </div>
+                    <div class="name-job">
+                        <div class="profile_name">Ayşe Aktuğ</div>
+                        <div class="job">Pazarlama Müdürü</div>
+                    </div>
+                    <i class='bx bx-log-out'></i>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <section class="home-section">
+        <div class="dashboard-cards">
+            <div class="dashboard-card">
+                <h3>Günlük Ürün Sayısı</h3>
+                <p id="urunSayisi">20</p>
+            </div>
+            <div class="dashboard-card">
+                <h3>Müşteri Sayısı</h3>
+                <p id="musteriSayisi">15</p>
+            </div>
+            <div class="dashboard-card">
+                <h3>Günlük Kar</h3>
+                <p id="yillikKar">80K</p>
+            </div>
+            <div class="dashboard-card">
+                <h3>Şube Sayısı</h3>
+                <p id="subeSayisi">5</p>
+            </div>
+        </div>
+        
+                <div class="chart-container-graphs">
+                    
+                    <div class="chartA">
+                        
+                        <canvas id="karGrafik"></canvas>
+                    </div>
+                    <div class="chartB">
+                        <canvas id="subeKarGrafik"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="content-2">
+            <div class="recent-payments">
+                <div class="title">
+                    <h2>Son Satılan Ürünler</h2>
+                </div>
+                <table>
+                    <tr>
+                        <th>Adı</th>
+                        <th>Tutar</th>
+                    </tr>
+                    <tr>
+                        <td>Ayşe</td>
+                        <td>5000</td>
+                    </tr>
+                    <tr>
+                        <td>Ayşe</td>
+                        <td>5000</td>
+                    </tr>
+                    <tr>
+                        <td>Ayşe</td>
+                        <td>5000</td>
+                    </tr>
+                    <tr>
+                        <td>Ayşe</td>
+                        <td>5000</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="new-students">
+                <div class="title">
+                    <h2>Yeni müşteriler</h2>
+                    
+                </div>
+                <table>
+                    <tr>
+                        <th>Profil</th>
+                        <th>Ad-Soyad</th>
+                        <th>Ürün Adı</th>
+                    </tr>
+                    <tr>
+                        <td><img src="user.png" alt=""></td>
+                        <td>Zeynep Kaya</td>
+                        <td>1. Kur</td>
+                    </tr>
+                    <tr>
+                        <td><img src="user.png" alt=""></td>
+                        <td>Zeynep Kaya</td>
+                        <td>1. Kur</td>
+                    </tr>
+                    <tr>
+                        <td><img src="user.png" alt=""></td>
+                        <td>Zeynep Kaya</td>
+                        <td>1. Kur</td>
+                    </tr>
+                </table>  -->
+        <!-- <canvas id="competitorPricesChart" style="max-height: 500px;"></canvas> -->
+    </section>
+    <script>
+        var ctx = document.getElementById('karGrafik').getContext('2d');
+        var karChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Toprak işleme makineleri', 'Ekim, Dikim Gübreleme Makineleri', 'Sulama', 'Hasat, Harman', 'Römork ve Tanker'],
+                datasets: [{
+                    label: 'Kar Oranları',
+                    data: [50, 75, 30, 45, 60],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+var subeCtx = document.getElementById('subeKarGrafik').getContext('2d');
+var subeKarChart = new Chart(subeCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Menderes Şubesi', 'Tepeköy Şubesi', 'Yeşilköy Şubesi', 'Manisa Şubesi', 'İncirli Şubesi'],
+        datasets: [{
+            data: [20, 30, 15, 25, 10],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        cutout: '80%', // Adjust the cutout percentage as needed
+        maintainAspectRatio: false, // Boyutları özelleştirmek için
+        responsive: true // Ölçeklendirilebilirlik özelliği
+    }
+});
+
+        
+    </script>
+
+
+    <script src="js/menu.js"></script>
+</body>
+
+</html>

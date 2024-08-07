@@ -1,0 +1,194 @@
+<!-- ürünler.html -->
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ürünler</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <!-- Side bar kodları burada -->
+    <div class="sidebar">
+        <div class="logo-details">
+            <i class='bx bx-meteor'></i>
+            <span class="logo_name">Türel Tarım A.Ş</span>
+        </div>
+        <ul class="nav-links">
+            <li>
+                <a href="index.html">
+                    <i class='bx bx-grid-alt'></i>
+                    <span class="link_name">Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="urunler" id="urunlerLink"> <!-- id ekledik -->
+                    <i class='bx bx-pie-chart-alt-2'></i>
+                    <span class="link_name">Ürünler</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">Ürünler</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="yorumlar.html" id="urunlerLink"> <!-- id ekledik -->
+                    <i class='bx bx-pie-chart-alt-2'></i>
+                    <span class="link_name">Yorumlar</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">Yorumlar</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="musteri.html">
+                    <i class='bx bxs-network-chart'></i>
+                    <span class="link_name">Müşteriler</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">Müşteriler</a></li>
+                </ul>
+            </li>
+
+
+
+            <li>
+                <div class="profile-details">
+                    <div class="profile-content">
+                        <img src="img.jpeg" alt="profile">
+                    </div>
+                    <div class="name-job">
+                        <div class="profile_name">Ayşe Aktuğ</div>
+                        <div class="job">Pazarlama Müdürü</div>
+                    </div>
+                    <i class='bx bx-log-out'></i>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Ürünler yazısı için stil -->
+    <style>
+        body {
+            position: relative;
+        }
+
+        .products-section::before {
+            content: "Ürünler";
+            position: fixed;
+            top: 10px; /* Ayarladığınız yükseklik */
+            right: 10px; /* Ayarladığınız genişlik */
+            font-size: 24px; /* Ayarladığınız font boyutu */
+            font-weight: bold;
+        }
+
+        .sidebar {
+            margin-right: 220px; /* Sidebar genişliği */
+            transition: margin-right 0.5s;
+        }
+
+        .sidebar.close {
+            margin-right: 70px; /* Kapalı durumda sidebar genişliği */
+        }
+        .products-section {
+        margin-left: 250px; /* Sidebar genişliği + boşluk */
+        padding: 20px; /* İçerik alanının etrafındaki boşluk */
+        margin-top: 50px; /* Ürünler yazısının üzerindeki boşluk */
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 220px;
+        background: #111;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.5s;
+        z-index: 999;
+    }
+
+    .sidebar.close {
+        width: 70px;
+    }
+
+    .nav-links {
+        width: 100%;
+        padding: 10px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-links li {
+        width: 100%;
+        text-align: center;
+    }
+
+    .products-section::before {
+        content: "Ürünler";
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+        font-weight: bold;
+        z-index: 999;
+    }
+    
+    .chart-container {
+      display: flex;
+      justify-content: space-between;
+    }
+    .chart {
+      width: 48%; /* İstediğiniz genişliği ayarlayabilirsiniz */
+    }
+    .customer-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .customer-button:hover {
+            background-color: #45a049;
+        }
+ 
+    </style>
+
+    <!-- Ürünler sayfasının geri kalanı burada -->
+    <section class="products-section" id="productSection">
+        <!-- Ürün kartları burada dinamik olarak eklenecek -->
+    </section>
+
+    <script src="/js/menu.js"></script>
+    <script src="/js/urunler.js"></script>
+    <!-- <script src="path/to/your/js/urun1.js"></script> -->
+
+    <script>
+        // JavaScript kodu burada olacak
+        renderProducts(); // Ürünleri render et
+
+        // Yönlendirme işlemi
+        document.getElementById('urunlerLink').addEventListener('click', function() {
+            window.location.href = 'ürünler.html';
+        });
+    </script>
+
+</body>
+
+</html>

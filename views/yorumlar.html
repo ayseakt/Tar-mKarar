@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Müşteri Yorumları</title>
+    <!-- Diğer head içeriği -->
+    <style>
+        /* Stil bilgileri buraya ekleyin */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .olumlu {
+            background-color: #c8e6c9;
+        }
+
+        .olumsuz {
+            background-color: #ffcdd2;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Yorum Tablosu -->
+    <h1>Müşteri Yorumları</h1>
+    <div>
+        <label for="filterType">Filtrele:</label>
+        <select id="filterType" onchange="filterComments()">
+            <option value="all">Hepsi</option>
+            <option value="positive">Olumlu</option>
+            <option value="negative">Olumsuz</option>
+        </select>
+
+        <label for="filterProduct">Ürün Filtrele:</label>
+        <select id="filterProduct" onchange="filterComments()">
+            <option value="all">Hepsi</option>
+            <option value="Toprak İşleme Makineleri">Toprak İşleme Makineleri</option>
+            <option value="Ekim,Dikim, Gübreleme Makineleri">Ekim,Dikim, Gübreleme Makineleri</option>
+            <option value="Sulama">Sulama</option>
+            <option value="Hasat ,Harman ">Hasat ,Harman </option>
+            <option value="Römork ve Tanker">Römork ve Tanker</option>
+            <!-- İhtiyaca göre diğer ürünleri ekleyin -->
+        </select>
+
+        <label for="filterBranch">Şube Filtrele:</label>
+        <select id="filterBranch" onchange="filterComments()">
+            <option value="all">Hepsi</option>
+            <option value="Menderes">Menderes</option>
+            <option value="Tepeköy">Tepeköy</option>
+            <option value="Yeşilköy">Yeşilköy</option>
+            <option value="Manisa">Manisa</option>
+            <option value="İncirli">İncirli</option>
+            <!-- İhtiyaca göre diğer şubeleri ekleyin -->
+        </select>
+    </div>
+    <table id="commentTable">
+        <thead>
+            <tr>
+                <th>Müşteri Adı</th>
+                <th>Müşteri Soyadı</th>
+                <th>Şube İsmi</th>
+                <th>Aldığı Ürün</th>
+                <th>Geri Dönüt</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Örnek Yorum Satırları -->
+            <tr class="olumlu" data-product="Ekim,Dikim, Gübreleme Makineleri" data-branch="Menderes">
+                <td>Ahmet</td>
+                <td>Yılmaz</td>
+                <td>Menderes</td>
+                <td>Ekim,Dikim, Gübreleme Makineleri</td>
+                <td>Çok memnun kaldım, teşekkürler!</td>
+            </tr>
+            <tr class="olumlu" data-product="Sulama" data-branch="Yeşilköy">
+                <td>Aslı</td>
+                <td>Kara</td>
+                <td>Yeşilköy</td>
+                <td>Sulama</td>
+                <td>Ürün kalitesi beklentilerimi aştı.</td>
+            </tr>
+            <tr class="olumsuz" data-product="Hasat ,Harman " data-branch="Manisa">
+                <td>Vedat</td>
+                <td>Işık</td>
+                <td>Manisa</td>
+                <td>Hasat ,Harman </td>
+                <td>Ürün kalitesi beklentilerimi karşılamadı.</td>
+            </tr>
+            <tr class="olumlu" data-product="Römork ve Tanker" data-branch="İncirli">
+                <td>Enver</td>
+                <td>Gezen</td>
+                <td>İncirli</td>
+                <td>Römork ve Tanker</td>
+                <td>Ürün kalitesi mükemmeldi.</td>
+            </tr>
+            <tr class="olumsuz" data-product="Ekim,Dikim, Gübreleme Makineleri" data-branch="İncirli">
+                <td>Mithat</td>
+                <td>Küçük</td>
+                <td>İncirli</td>
+                <td>Ekim,Dikim, Gübreleme Makineleri</td>
+                <td>Kırık geldi Tedarik çok kötü.</td>
+            </tr>
+            <tr class="olumlu" data-product="Sulama" data-branch="İncirli">
+                <td>Ayşe</td>
+                <td>Gündüz</td>
+                <td>İncirli</td>
+                <td>Sulama</td>
+                <td>Efsane bir ürün.</td>
+            </tr>
+            <tr class="olumlu" data-product="Sulama" data-branch="Kara">
+                <td>Kaya</td>
+                <td>Günay</td>
+                <td>Kara</td>
+                <td>Sulama</td>
+                <td>Efsane bir ürün.</td>
+            </tr>
+            <!-- <tr class="olumlu" data-product="Sulama" data-branch="Kara">
+                <td>Semih</td>
+                <td>Gün</td>
+                <td>Kara</td>
+                <td>Sulama</td>
+                <td>Efsane bir ürün.</td>
+            </tr>
+            <tr class="olumlu" data-product="Sulama" data-branch="Menderes">
+                <td>Ayşe</td>
+                <td>Gündüz</td>
+                <td>Menderes</td>
+                <td>Sulama</td>
+                <td>Efsane bir ürün.</td>
+            </tr> -->
+            <!-- Diğer yorum satırlarını isteğinize göre ekleyin -->
+        </tbody>
+    </table>
+
+    <!-- JavaScript Kodları -->
+    <script>
+        function filterComments() {
+            var filterType = document.getElementById("filterType").value;
+            var filterProduct = document.getElementById("filterProduct").value;
+            var filterBranch = document.getElementById("filterBranch").value;
+            var rows = document.getElementById("commentTable").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+            for (var i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                var isPositive = row.classList.contains("olumlu");
+                var isNegative = row.classList.contains("olumsuz");
+                var product = row.getElementsByTagName("td")[3].textContent;
+                var branch = row.getElementsByTagName("td")[2].textContent;
+
+                if ((filterType === "all" || (filterType === "positive" && isPositive) || (filterType === "negative" && isNegative))
+                    && (filterProduct === "all" || filterProduct === product)
+                    && (filterBranch === "all" || filterBranch === branch)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

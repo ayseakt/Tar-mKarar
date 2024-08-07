@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Giriş</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #555;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 80px;
+            width: 500px;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            color: #333;
+        }
+
+        .login-form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .form-group button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+        .giris{
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>Türel Tarım A.Ş KDS  Uygulaması Giriş</h2>
+        <form class="login-form" id="loginForm">
+            <div class="form-group">
+                <label for="email">E-Posta:</label>
+                <input type="text" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Şifre:</label>
+                <input type="password" id="password" required>
+            </div>
+            <div class="form-group">
+                <button  type="button" onclick=" "><a class="giris" href="index">Giriş Yap</a></button>
+            </div>
+            <div class="form-group">
+                <button type="button" onclick="showRegisterForm()">Kayıt Ol</button>
+            </div>
+        </form>
+
+        <form class="register-form" id="registerForm" style="display: none;">
+            <div class="form-group">
+                <label for="newEmail">Yeni E-Posta:</label>
+                <input type="text" id="newEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="newPassword">Yeni Şifre:</label>
+                <input type="password" id="newPassword" required>
+            </div>
+            <div class="form-group">
+                <button type="button" onclick="register()">Kayıt Ol</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function login() {
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+
+            // Kullanıcı adı ve şifreyi kontrol etmek için
+            // uygun bir işlemi buraya ekleyebilirsiniz.
+            // Bu örnekte, sadece örnek bir kontrol yapısı bulunmaktadır.
+
+            if (email === "kullanici@mail.com" && password === "sifre") {
+                alert("Giriş başarılı!");
+                // Bu kısmı değiştirerek istediğiniz sayfaya yönlendirebilirsiniz.
+                window.location.href = "/index";
+            } else {
+                alert("E-posta veya şifre hatalı!");
+            }
+        }
+
+        function showRegisterForm() {
+            document.getElementById("loginForm").style.display = "none";
+            document.getElementById("registerForm").style.display = "block";
+        }
+
+        function register() {
+            var newEmail = document.getElementById("newEmail").value;
+            var newPassword = document.getElementById("newPassword").value;
+
+            // Kullanıcı adı ve şifreyi sunucuya göndermek için AJAX kullanabilirsiniz.
+            // Örnek bir AJAX çağrısı:
+            fetch('http://localhost:3000/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: newEmail,
+                    password: newPassword
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Kayıt başarılı!");
+                        // Kayıt başarılıysa, istediğiniz bir eylemi gerçekleştirebilirsiniz.
+                    } else {
+                        alert("Kayıt başarısız!");
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+
+</html>
